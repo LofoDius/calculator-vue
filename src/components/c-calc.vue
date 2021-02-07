@@ -235,7 +235,6 @@ export default {
 </script>
 
 <style scoped>
-/*TODO поменять минимальные*/
 .c-calc__container {
   display: flex;
   flex-direction: column;
