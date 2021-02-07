@@ -22,8 +22,11 @@ export default {
   background-color: #c1dee7;
   border: none;
 
-  font-size: xx-large;
+  color: #184766;
+  font-size: 4vh;
   font-family: Roboto, sans-serif;
+
+  border-radius: 0.2em;
 }
 
 .c-button:hover {

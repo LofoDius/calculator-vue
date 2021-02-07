@@ -1,6 +1,6 @@
 <template>
   <div class="c-memory-functions-container">
-    <c-button v-for="fun in functions" :key="fun" :label="fun" @onKeyPresed="onKeyPressed"/>
+    <c-button v-for="fun in functions" :key="fun" :label="fun" @onKeyPressed="onKeyPressed"/>
   </div>
 </template>
 

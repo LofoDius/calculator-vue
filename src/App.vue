@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <c-calc/>
+    <notifications position="bottom left"/>
   </div>
 </template>
 

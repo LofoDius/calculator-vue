@@ -1,6 +1,6 @@
 <template>
   <div class="c-calc__container">
-    <c-panel :value="displayText"/>
+    <c-panel :value="displayText" :memory-value="memoryValue"/>
     <div class="c-calc__memory">
       <c-memory-functions @onKeyPressed="onKeyPressed"/>
       <c-clear @onKeyPressed="onKeyPressed"/>
@@ -9,7 +9,7 @@
       <c-keypad @onKeyPressed="onKeyPressed"/>
       <div class="right">
         <c-modifiers @onKeyPressed="onKeyPressed"/>
-        <c-operations @onKeyPressed="onKeyPressed"/>
+        <c-operations @onKeyPressed="onKeyPressed" :highlight="highlightAction"/>
         <c-button label="=" @onKeyPressed="compute"/>
       </div>
     </div>
@@ -44,14 +44,23 @@ export default {
       operationKeys: ['+', '×', '-', '÷'],
       currentAction: '',
       lastValue: 0,
-      inMemoryValue: null,
-      isResultVisible: false
+      inMemoryValue: 0,
+      isResultVisible: false,
+      isPrevNumberVisible: false
     }
   },
 
   computed: {
     displayText() {
       return this.display;
+    },
+
+    memoryValue() {
+      return this.inMemoryValue.toString();
+    },
+
+    highlightAction() {
+      return this.currentAction;
     }
   },
 
@@ -59,31 +68,35 @@ export default {
     onKeyPressed(label) {
       switch (label) {
         case '.': {
-          if (this.display.includes(',')) break;
+          if (this.display.includes('.') || this.display.includes('e')) break;
           else this.display += '.';
           break;
         }
         case '⌫': {
           if (this.display === '0') break;
           this.display = this.display.substring(0, this.display.length - 1);
+          if (this.display.length === 0) this.display = '0';
           break;
         }
         case 'CA': {
           this.display = '0';
           this.currentAction = '';
           this.lastValue = 0;
-          this.inMemoryValue = null;
           break;
         }
         case 'e': {
-          if (this.display === '') this.display = '0';
+          if (this.display.includes('e')) {
+            this.display = this.display.split('e')[0]
+            break;
+          }
 
           if (this.isResultVisible) {
             this.currentAction = '';
             this.lastValue = 0;
+            this.isResultVisible = false;
           }
 
-          this.display += 'e';
+          this.display += 'e+';
           break;
         }
         case '±': {
@@ -101,8 +114,10 @@ export default {
           if (this.inMemoryValue === null) break;
 
           if (this.currentAction !== '') {
+            this.lastValue = parseFloat(this.display);
             this.display = this.inMemoryValue.toString();
             this.compute();
+            return;
           }
 
           this.display = this.inMemoryValue.toString();
@@ -126,22 +141,39 @@ export default {
     },
 
     operationHandler(label) {
-      if (this.display[this.display.length - 1] === 'e' && label === '-') {
-        this.display += '-';
+      if (this.display[this.display.length - 2] === 'e' && label === '-') {
+        this.display = this.display.replace('+', '-');
         return;
       }
 
-      console.log(parseFloat(this.display));
+      if (this.display[this.display.length - 2] === 'e' && label === '+') {
+        this.display = this.display.replace('-', '+');
+        return;
+      }
+
+      if (this.currentAction !== '') {
+        this.compute();
+      }
+
+      this.isPrevNumberVisible = true;
+      this.isResultVisible = false;
       this.lastValue = parseFloat(this.display);
-      this.display = '0';
       this.currentAction = label;
     },
 
     numberHandler(label) {
+      if (this.isPrevNumberVisible) {
+        this.display = label;
+        this.isPrevNumberVisible = false;
+        return;
+      }
+
       if (this.isResultVisible) {
         this.display = label;
         this.lastValue = 0;
-        this.currentAction = ''
+        this.currentAction = '';
+        this.isResultVisible = false;
+        return;
       }
 
       if (this.display === '0') {
@@ -152,44 +184,51 @@ export default {
         }
       }
 
+      if (this.display.includes('e')) {
+        let lengthCheck = this.display.split('e');
+        if (lengthCheck[1].length >= 4) {
+          return
+        }
+      } else if (this.display.length >= 8)
+        return;
+
       this.display += label;
     },
 
     compute() {
-      console.log('currentAction: ', this.currentAction);
-      console.log('lastValue: ', this.lastValue);
-      console.log('display: ', parseFloat(this.display));
-
       switch (this.currentAction) {
         case '-': {
           this.display = (this.lastValue - parseFloat(this.display)).toString();
           this.lastValue = parseFloat(this.display);
+          this.isResultVisible = true;
           break;
         }
         case '+': {
           this.display = (this.lastValue + parseFloat(this.display)).toString();
-          this.lastValue = parseFloat(this.display);
           break;
         }
         case '×': {
           this.display = (this.lastValue * parseFloat(this.display)).toString();
-          this.lastValue = parseFloat(this.display);
           break;
         }
         case '÷': {
           if (parseFloat(this.display) === 0) {
             this.display = '0';
             this.lastValue = 0;
-            this.inMemoryValue = null;
             this.currentAction = '';
-            alert('Error: division by zero!');
+            this.$notify({type: 'error', text: 'Error: division by zero!'});
             break;
           }
           this.display = (this.lastValue / parseFloat(this.display)).toString();
-          this.lastValue = parseFloat(this.display);
           break;
         }
       }
+      if (this.display.length > 8) {
+        this.display = (parseFloat(this.display)).toExponential(6);
+      }
+      this.currentAction = '';
+      this.lastValue = parseFloat(this.display);
+      this.isResultVisible = true;
     }
   }
 }
@@ -202,16 +241,15 @@ export default {
   flex-direction: column;
   flex-wrap: wrap;
 
-  min-height: 450px;
-  min-width: 350px;
-  height: 75vh;
-  width: 60vh;
+  height: calc(75vh + (120px - 12vh));
+  width: calc(60vh + (50px - 3vh));
 
   padding: 20px;
 
   background-color: #f8f8f5;
   border: #f891a0 2px solid;
   border-radius: 7px;
+  box-shadow: 10px 15px 4px rgba(196,178,209, 0.35);
 }
 
 .temp {
@@ -245,11 +283,16 @@ export default {
 
 .c-button:last-child {
   background-color: #f891a0;
+  color: #b83b48;
 }
 
 .c-button:last-child:hover {
-  box-shadow: 0 0 20px #237b90;
-  border: 2px #f891a0 solid;
+  box-shadow: 0 0 20px #fa6e6e;
   border-radius: 0.2em;
+  color: #bb414f;
+}
+
+.c-button:last-child:active {
+  background-color: #ef6773;
 }
 </style>
