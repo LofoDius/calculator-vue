@@ -1,5 +1,5 @@
 <template>
-  <button class="c-button">{{label}}</button>
+  <button class="c-button" @click="$emit('onKeyPressed', label)">{{label}}</button>
 </template>
 
 <script>

@@ -1,11 +1,12 @@
 <template>
   <div class="c-keypad__container">
-    <c-button v-for="key in keys" :key="key" :label="key"/>
+    <c-button v-for="key in keys" :key="key" :label="key" @onKeyPressed="onKeyPressed"/>
   </div>
 </template>
 
 <script>
 import cButton from '@/components/c-button'
+
 export default {
   name: "c-keypad",
   components: {
@@ -14,6 +15,12 @@ export default {
   data() {
     return {
       keys: ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0', '.']
+    }
+  },
+
+  methods: {
+    onKeyPressed(label) {
+      this.$emit('onKeyPressed', label);
     }
   }
 }

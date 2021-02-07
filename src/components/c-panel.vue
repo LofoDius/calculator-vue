@@ -1,11 +1,19 @@
 <template>
   <div class="c-panel__container">
+    {{value}}
   </div>
 </template>
 
 <script>
 export default {
-  name: "c-panel"
+  name: "c-panel",
+
+  props: {
+    value: {
+      type: String,
+      default: "123"
+    }
+  }
 }
 </script>
 

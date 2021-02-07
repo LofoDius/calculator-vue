@@ -1,6 +1,6 @@
 <template>
   <div class="c-memory-functions-container">
-    <c-button v-for="fun in functions" :key="fun" :label="fun"/>
+    <c-button v-for="fun in functions" :key="fun" :label="fun" @onKeyPresed="onKeyPressed"/>
   </div>
 </template>
 
@@ -12,6 +12,12 @@ export default {
   data() {
     return {
       functions: ['MS', 'MR', 'M+']
+    }
+  },
+
+  methods: {
+    onKeyPressed(label) {
+      this.$emit('onKeyPressed', label);
     }
   }
 }

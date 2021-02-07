@@ -1,8 +1,8 @@
 <template>
   <div class="c-clear__container">
 <!--    TODO добавить хинты-->
-    <c-button label="CA"/>
-    <c-button label="⌫"/>
+    <c-button label="CA" @onKeyPressed="$emit('onKeyPressed', 'CA')"/>
+    <c-button label="⌫" @onKeyPressed="$emit('onKeyPressed', '⌫')"/>
   </div>
 </template>
 

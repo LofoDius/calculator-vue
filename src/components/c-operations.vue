@@ -1,6 +1,6 @@
 <template>
   <div class="c-operations__container">
-    <c-button v-for="operation in operations" :key="operation" :label="operation"/>
+    <c-button v-for="operation in operations" :key="operation" :label="operation" @onKeyPressed="onKeyPressed"/>
   </div>
 </template>
 
@@ -13,7 +13,13 @@ export default {
   },
   data() {
     return {
-      operations: ['+', '×', '−', '÷']
+      operations: ['+', '×', '-', '÷']
+    }
+  },
+
+  methods: {
+    onKeyPressed(label) {
+      this.$emit('onKeyPressed', label);
     }
   }
 }

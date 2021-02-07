@@ -1,7 +1,7 @@
 <template>
   <div class="c-modifiers__container">
-    <c-button label="±"/>
-    <c-button label="e"/>
+    <c-button label="e" @onKeyPressed="$emit('onKeyPressed', 'e')"/>
+    <c-button label="±" @onKeyPressed="$emit('onKeyPressed', '±')"/>
   </div>
 </template>
 
