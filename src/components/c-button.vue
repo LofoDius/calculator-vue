@@ -1,5 +1,5 @@
 <template>
-  <button class="c-button" @click="$emit('onKeyPressed', label)">{{label}}</button>
+  <button class="c-button" @click="$emit('onKeyPressed', label)">{{ label }}</button>
 </template>
 
 <script>
@@ -23,8 +23,8 @@ export default {
   border: none;
 
   color: #184766;
+  font-family: pock, sans-serif;
   font-size: 4vh;
-  font-family: Roboto, sans-serif;
 
   border-radius: 0.2em;
 }

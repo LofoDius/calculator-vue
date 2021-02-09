@@ -6,6 +6,7 @@
 
 <script>
 import CButton from "@/components/c-button";
+
 export default {
   name: "c-memory-functions",
   components: {CButton},
@@ -26,5 +27,10 @@ export default {
 <style scoped>
 .c-memory-functions-container {
   display: flex;
+}
+
+.c-memory-functions-container .c-button {
+  font-size: 3.5vh;
+  letter-spacing: 2px;
 }
 </style>

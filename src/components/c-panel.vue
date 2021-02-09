@@ -1,10 +1,10 @@
 <template>
   <div class="c-panel__container">
     <div class="c-panel__memory-value" v-if="memoryValue != 0">
-      Memory: {{memoryValue}}
+      Memory: {{ memoryValue }}
     </div>
     <div class="c-panel__value">
-      {{value}}
+      {{ value }}
     </div>
   </div>
 </template>
@@ -37,6 +37,7 @@ export default {
 }
 
 .c-panel__value {
+  font-family: pock, sans-serif;
   display: flex;
   height: 10vh;
   justify-content: flex-end;

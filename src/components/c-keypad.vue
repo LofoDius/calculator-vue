@@ -35,6 +35,12 @@ export default {
 
   max-width: calc(30vh + 6px);
   width: 60%;
+
+  font-family: 'ds-digitalnormal', sans-serif;
+}
+
+.c-keypad__container .c-button {
+  font-size: 6vh;
 }
 
 .c-button:nth-child(10) {

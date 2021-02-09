@@ -19,8 +19,15 @@ export default {
 <style>
 @import "./style/reset.css";
 
+@font-face {
+  font-family: 'pock';
+  src: url("./assets/fonts/pock.TTF") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: ds-digitalnormal, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #f9e8ef;

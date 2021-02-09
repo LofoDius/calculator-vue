@@ -41,7 +41,7 @@ export default {
     return {
       display: '0',
       numberKeys: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-      operationKeys: ['+', '×', '-', '÷'],
+      operationKeys: ['+', '*', '-', '÷'],
       currentAction: '',
       lastValue: 0,
       inMemoryValue: 0,
@@ -64,7 +64,36 @@ export default {
     }
   },
 
+  created() {
+    document.addEventListener('keydown', this.onkeydown)
+  },
+
   methods: {
+    onkeydown(e) {
+      switch (e.key) {
+        case "Enter": {
+          this.compute();
+          break;
+        }
+        case "Backspace": {
+          this.onKeyPressed("<-");
+          break;
+        }
+        case "*": {
+          this.onKeyPressed("*");
+          break;
+        }
+        case "/": {
+          this.onKeyPressed("÷");
+          break;
+        }
+        default: {
+          this.onKeyPressed(e.key);
+          break;
+        }
+      }
+    },
+
     onKeyPressed(label) {
       switch (label) {
         case '.': {
@@ -72,7 +101,7 @@ export default {
           else this.display += '.';
           break;
         }
-        case '⌫': {
+        case '<-': {
           if (this.display === '0') break;
           this.display = this.display.substring(0, this.display.length - 1);
           if (this.display.length === 0) this.display = '0';
@@ -99,7 +128,7 @@ export default {
           this.display += 'e+';
           break;
         }
-        case '±': {
+        case '+/-': {
           if (this.display === '0') break;
           if (this.display[0] === '-') this.display = this.display.substring(1, this.display.length);
           else this.display = '-' + this.display;
@@ -207,7 +236,7 @@ export default {
           this.display = (this.lastValue + parseFloat(this.display)).toString();
           break;
         }
-        case '×': {
+        case '*': {
           this.display = (this.lastValue * parseFloat(this.display)).toString();
           break;
         }
@@ -244,11 +273,12 @@ export default {
   width: calc(60vh + (50px - 3vh));
 
   padding: 20px;
-
   background-color: #f8f8f5;
   border: #f891a0 2px solid;
   border-radius: 7px;
-  box-shadow: 10px 15px 4px rgba(196,178,209, 0.35);
+  box-shadow: 10px 15px 4px rgba(196, 178, 209, 0.35);
+
+  font-family: Roboto, sans-serif;
 }
 
 .temp {
@@ -283,6 +313,7 @@ export default {
 .c-button:last-child {
   background-color: #f891a0;
   color: #b83b48;
+  font-size: 5vh;
 }
 
 .c-button:last-child:hover {
